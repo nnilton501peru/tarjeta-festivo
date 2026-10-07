@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tarjetas con cariño</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fraunces:ital,wght@1,600&family=Fredoka:wght@500&family=Pacifico&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f2fb;--tx:#241338;--mu:#6b5a82;--pn:#fff;--bd:#e4d9f1;--ac:#6d28d9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#130b20;--tx:#f4ecff;--mu:#b6a3d1;--pn:#1f1334;--bd:#382559;--ac:#a78bfa}}
+:root[data-theme="dark"]{--bg:#130b20;--tx:#f4ecff;--mu:#b6a3d1;--pn:#1f1334;--bd:#382559;--ac:#a78bfa}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',system-ui,sans-serif;line-height:1.5}
+h1,h2{font-family:Fraunces,Georgia,serif;font-style:italic;font-weight:600}
+.wrap{max-width:560px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:2.3rem;line-height:1.1;margin:8px 0;color:var(--ac)}
+h2{font-size:1.3rem;margin:30px 0 12px}
+.sub{color:var(--mu);margin:0}
+.lb{font-weight:700;margin:18px 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{min-height:92px;padding:14px;border:0;border-radius:22px;color:#fff;font:inherit;font-weight:700;text-align:left;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;box-shadow:0 10px 22px -10px rgba(0,0,0,.45);text-shadow:0 1px 6px rgba(0,0,0,.25)}
+.tile span{font-size:1.9rem;line-height:1}
+.tile[aria-pressed="true"]{outline:3px solid var(--tx);outline-offset:3px}
+input,textarea{width:100%;padding:13px;border:1.5px solid var(--bd);border-radius:14px;background:var(--pn);color:var(--tx);font:inherit}
+textarea{min-height:110px;resize:vertical}
+:is(input,textarea,button,a):focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.ms{display:block;width:100%;text-align:left;padding:13px 14px;margin-bottom:8px;border-radius:16px;border:1.5px solid var(--bd);background:var(--pn);color:var(--tx);font:inherit;cursor:pointer}
+.ms[aria-pressed="true"]{border-color:var(--ac);box-shadow:0 0 0 1.5px var(--ac) inset}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+.chip{padding:10px 14px;border:2px solid var(--bd);border-radius:999px;background:var(--pn);color:var(--tx);font:inherit;font-weight:700;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--ac);background:var(--ac);color:#fff}
+.sw{position:relative;flex:0 0 46px;width:46px;height:46px;border-radius:50%;border:3px solid transparent;padding:0;cursor:pointer}
+.sw[aria-pressed="true"]{outline:3px solid var(--tx);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.thumb{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:5;border-radius:20px;padding:12px 14px;margin-bottom:14px;color:#fff;text-align:center;box-shadow:0 12px 26px -12px rgba(0,0,0,.55);text-shadow:0 2px 8px rgba(0,0,0,.25)}
+#tht{font-size:1.25rem;line-height:1.2}
+#thm{font-size:calc(.9rem*var(--tz,1));line-height:1.3;margin:6px 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.throw{display:flex;align-items:center;justify-content:center;gap:12px}
+#the{font-size:1.1rem}
+#pv{padding:7px 14px;border:2px solid rgba(255,255,255,.8);border-radius:999px;background:rgba(255,255,255,.22);color:#fff;font:inherit;font-size:.9rem;font-weight:700;cursor:pointer;text-shadow:none}
+.btn{display:block;width:100%;margin-top:26px;padding:15px;border:0;border-radius:16px;background:var(--ac);color:#fff;font:inherit;font-weight:700;font-size:1.05rem;cursor:pointer;text-align:center;text-decoration:none}
+.btn.alt{background:transparent;color:var(--ac);border:2px solid var(--ac);margin-top:10px}
+#out{display:none;margin-top:26px;padding:18px;border:1.5px solid var(--bd);border-radius:20px;background:var(--pn)}
+#out input{font-size:.85rem}
+.card{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));color:#fff;text-align:center;overflow:hidden}
+.card.on{display:flex}
+.card h2{font-family:inherit;font-style:inherit;font-weight:inherit;font-size:clamp(1.9rem,8.5vw,2.8rem);line-height:1.15;margin:0 0 18px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
+.msg{font-size:calc(clamp(1.35rem,5.8vw,1.8rem)*var(--fs,1)*var(--sz,1));max-width:30ch;min-height:6em;max-height:52vh;overflow-y:auto;scrollbar-width:none;white-space:pre-wrap;text-shadow:0 1px 8px rgba(0,0,0,.3)}
+.card .btn{width:auto;min-width:210px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);margin-top:12px;position:relative;z-index:2;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;font-weight:700}
+.card .btn.alt{color:#fff;border-color:rgba(255,255,255,.7)}
+.acts{opacity:0;transition:opacity .6s;pointer-events:none;display:flex;flex-direction:column;align-items:center}
+.acts.on{opacity:1;pointer-events:auto}
+.p{position:absolute;pointer-events:none;user-select:none;animation-timing-function:linear;animation-fill-mode:forwards}
+.p.up{bottom:-40px;animation-name:up}.p.down{top:-40px;animation-name:down}.p.sway{bottom:-40px;animation-name:sway}
+@keyframes up{to{transform:translateY(-115vh) rotate(25deg);opacity:.2}}
+@keyframes down{to{transform:translateY(115vh) rotate(200deg)}}
+@keyframes sway{25%{transform:translate(32px,-30vh)}50%{transform:translate(-32px,-60vh)}75%{transform:translate(32px,-90vh)}to{transform:translate(0,-115vh);opacity:.2}}
+.b{position:absolute;left:50%;top:50%;animation:boom 1.7s ease-out forwards;pointer-events:none}
+@keyframes boom{from{transform:translate(0,0) scale(.4);opacity:1}to{transform:translate(var(--x),var(--y)) scale(1.4);opacity:0}}
+.pop{position:absolute;left:50%;top:42%;font-size:7rem;animation:pop .8s ease-out forwards;pointer-events:none}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(0)}60%{transform:translate(-50%,-50%) scale(1.35)}to{transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion:reduce){.p,.b,.pop{animation-duration:.01s!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Tarjetas con cariño</h1>
+  <p class="sub">Elige la ocasión, toca un mensaje o escribe el tuyo, y mándala por WhatsApp.</p>
+
+  <h2>¿Para qué ocasión?</h2>
+  <div class="grid" id="oc"></div>
+
+  <h2>¿Para quién?</h2>
+  <input id="para" maxlength="40" placeholder="Nombre (opcional)" autocomplete="off" aria-label="Nombre">
+
+  <h2>Tu mensaje</h2>
+  <div id="ms"></div>
+  <textarea id="txt" maxlength="400" aria-label="Mensaje" placeholder="Escribe aquí tu mensaje"></textarea>
+
+  <h2>Dale tu estilo</h2>
+  <div id="estilo">
+  <div class="thumb" id="th"><div id="tht"></div><div id="thm"></div><div class="throw"><span id="the"></span><button type="button" id="pv">Ver cómo queda</button></div></div>
+  <div class="row" id="co"></div>
+  <p class="lb">Letra</p><div class="row" id="fo"></div>
+  <p class="lb">Tamaño de letra</p><div class="row" id="sz"></div>
+  <p class="lb">Velocidad al escribir</p><div class="row" id="ve"></div>
+  <p class="lb">Lo que flota mientras se escribe</p><div class="row" id="ef"></div>
+  <p class="lb">Gran final</p><div class="row" id="fn"></div>
+  </div>
+
+  <button class="btn" id="gen">Crear mi tarjeta</button>
+
+  <div id="out">
+    <label for="lnk" class="lb" style="display:block;margin-top:0">Tu enlace</label>
+    <input id="lnk" readonly>
+    <a class="btn" id="wa" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+    <button class="btn alt" id="cp">Copiar enlace</button>
+  </div>
+</main>
+
+<section class="card" id="card" aria-live="polite">
+  <h2 id="ct"></h2>
+  <div class="msg" id="cm"></div>
+  <div class="acts" id="ca">
+    <button class="btn" id="rp">Ver otra vez</button>
+    <a class="btn alt" id="mk" href="#">Crear la mía</a>
+    <button class="btn alt" id="cl" style="display:none">Volver</button>
+  </div>
+</section>
+
+<script>
+var CO={verde:['#22c55e','#065f46'],rojo:['#f87171','#991b1b'],azul:['#38bdf8','#1d4ed8'],morado:['#a855f7','#4c1d95'],rosa:['#f472b6','#be185d'],dorado:['#fbbf24','#b45309'],noche:['#4f46e5','#0f172a'],atardecer:['#fb923c','#c026d3']};
+var FO={elegante:['Fraunces,Georgia,serif',1,'italic',600],cursiva:['Pacifico,cursive',.9,'normal',400],divertida:['Fredoka,sans-serif',1,'normal',500],manuscrita:['Caveat,cursive',1.25,'normal',600]};
+var EF={estrellas:{n:'Estrellas',l:['⭐','✨','🌟'],m:'up'},globos:{n:'Globos',l:['🎈'],m:'up'},corazones:{n:'Corazones',l:['💖','💕','💗'],m:'sway'},flores:{n:'Flores',l:['🌸','🌷','🌼'],m:'down'},mariposas:{n:'Mariposas',l:['🦋'],m:'sway'},nieve:{n:'Nieve',l:['❄️'],m:'down'}};
+var FN={fuegos:{n:'Fuegos',l:['🎆','🎇','✨'],m:'burst'},confeti:{n:'Confeti',l:['🎊','🎉','🎈'],m:'rain'},petalos:{n:'Pétalos',l:['🌹','🌸','🌷'],m:'rain'},torta:{n:'Torta',l:['🎂','🍰','✨'],m:'pop'},corazones:{n:'Corazones',l:['❤️','💖','💘'],m:'burst'},regalos:{n:'Regalos',l:['🎁','🎄','⭐'],m:'pop'}};
+var OC={
+cum:{n:'Cumpleaños',e:'🎂',t:'¡Feliz cumpleaños{n}!',c:'rosa',f:'cursiva',x:'globos',z:'confeti',m:['Hoy es tu día y quiero que lo disfrutes al máximo. Que se cumplan todos tus sueños y que nunca te falte alegría. Te quiero mucho.','Un año más de vida, de risas y de recuerdos bonitos. Gracias por existir. ¡A celebrar como se debe!','Que Dios te bendiga hoy y siempre, y te llene de salud, paz y mucho amor. Disfruta tu día.','Un añito más, pero cada vez mejor. Que no falten la torta, los abrazos y las ganas de celebrar.']},
+nav:{n:'Navidad',e:'🎄',t:'¡Feliz Navidad{n}!',c:'rojo',f:'elegante',x:'nieve',z:'regalos',m:['Que esta Navidad llegue a tu casa con paz, unión y mucho amor. Que nunca falte la mesa llena ni la familia reunida.','Gracias por este año a tu lado. Te deseo una Navidad llena de luz y un año nuevo lleno de bendiciones.','Que el niño Dios nazca en tu corazón y te traiga esperanza, salud y alegría para todo el año.','Feliz Navidad: que el panetón sea grande, el chocolate caliente y los abrazos interminables.']},
+ano:{n:'Año Nuevo',e:'🥂',t:'¡Feliz Año Nuevo{n}!',c:'dorado',f:'divertida',x:'estrellas',z:'fuegos',m:['Que este año nuevo te traiga salud, trabajo y mucha felicidad. Que todo lo que pidas se haga realidad.','Cerramos un año más y lo hacemos juntos. Gracias por todo. ¡Que el próximo sea todavía mejor!','Brindo por ti y por todo lo bueno que viene. Que empiece con el pie derecho.','Nuevo año, nuevas metas y las mismas ganas de seguir adelante. ¡Vamos con todo!']},
+mad:{n:'Día de la Madre',e:'🌷',t:'¡Feliz Día de la Madre{n}!',c:'rosa',f:'manuscrita',x:'flores',z:'petalos',m:['Gracias por darme la vida y por tu amor de todos los días. Eres lo más valioso que tengo. Te amo, mamá.','Mamá, tus abrazos curan todo y tu cariño me da fuerzas. Gracias por no rendirte nunca conmigo.','Hoy y siempre quiero agradecerte todo lo que haces por nosotros. Dios te bendiga, mamita linda.','No hay palabras suficientes para decirte cuánto te quiero. Feliz día, la mejor mamá del mundo.']},
+pad:{n:'Día del Padre',e:'👔',t:'¡Feliz Día del Padre{n}!',c:'azul',f:'elegante',x:'estrellas',z:'confeti',m:['Gracias por ser mi ejemplo y por enseñarme a seguir adelante. Te quiero mucho, papá.','Papá, tu esfuerzo y tu cariño me inspiran cada día. Gracias por todo lo que me has dado.','Hoy quiero decirte lo orgulloso que me siento de tenerte como papá. Dios te bendiga, papito.','El mejor papá del mundo es el mío. Gracias por tu paciencia, tus consejos y tu cariño.']},
+ani:{n:'Aniversario',e:'💍',t:'¡Feliz aniversario{n}!',c:'dorado',f:'elegante',x:'mariposas',z:'petalos',m:['Cada día a tu lado es mi mejor regalo. Gracias por tu amor y por elegirme siempre. Feliz aniversario.','Un año más juntos y te sigo queriendo como el primer día, o más. Gracias por tanto.','Contigo aprendí que el amor es compañía, paciencia y risas. Que vengan muchos años más.','Gracias por quedarte en los días buenos y en los difíciles. Te amo hoy y siempre.']},
+val:{n:'San Valentín',e:'💘',t:'Feliz San Valentín{n} ❤',c:'rojo',f:'cursiva',x:'corazones',z:'corazones',m:['Eres la razón de mis sonrisas y mi lugar favorito. Feliz San Valentín, mi amor.','No necesito flores ni chocolates, solo tenerte a mi lado. Te quiero mucho.','Si me dieran a elegir otra vez, te elegiría a ti mil veces. Feliz día del amor.','Tú, yo y un día lleno de cariño. Gracias por hacerme tan feliz.']},
+gra:{n:'Graduación',e:'🎓',t:'¡Felicidades{n}!',c:'azul',f:'divertida',x:'estrellas',z:'confeti',m:['Lo lograste. Tu esfuerzo y tus desvelos valieron la pena. Qué orgullo verte llegar hasta aquí.','Felicidades por este gran paso. Que se abran todas las puertas y que sigas cumpliendo tus sueños.','De los libros al éxito: ahora empieza lo mejor. Mucha suerte en esta nueva etapa.','Nadie dijo que sería fácil, pero tú lo hiciste. Disfruta este logro, te lo mereces.']},
+gracias:{n:'Gracias',e:'🙏',t:'¡Gracias{n}!',c:'verde',f:'manuscrita',x:'mariposas',z:'corazones',m:['Gracias por estar siempre, por escucharme y por tu apoyo cuando más lo necesité. Vales oro.','Hay personas que hacen la vida más bonita, y tú eres una de ellas. Gracias de corazón.','No sé cómo agradecerte todo lo que hiciste por mí. Dios te lo pague con bendiciones.','Gracias por tu tiempo, tu paciencia y tu cariño. Te llevo siempre en mi corazón.']},
+perdon:{n:'Perdóname',e:'🤝',t:'Perdóname{n}',c:'noche',f:'manuscrita',x:'mariposas',z:'corazones',m:['Sé que me equivoqué y lo siento de verdad. Valoro mucho lo que tenemos y quiero arreglar las cosas.','Perdóname por lo que dije y por lo que hice. Tú me importas más que cualquier orgullo.','Un abrazo y un perdón sincero. Ojalá podamos hablar y empezar de nuevo.','No quiero perderte por una tontería. Perdóname, vamos a conversar con calma.']}
+};
+var S={o:'cum',c:'rosa',f:'cursiva',e:'globos',n:'confeti',s:'normal',v:'normal'};
+var SZ={normal:['Normal',1],grande:['Grande',1.2],extra:['Extra grande',1.4]};
+var VE={lenta:['Lenta',1.8],normal:['Normal',1],rapida:['Rápida',.5]};
+var $=function(i){return document.getElementById(i)};
+var timer=null;
+function G(c){return 'linear-gradient(160deg,'+c[0]+','+c[1]+')'}
+function cap(x){return x.charAt(0).toUpperCase()+x.slice(1)}
+function B(s,k,h,cl,st){return '<button type="button" class="'+cl+'" data-s="'+s+'" data-k="'+k+'" aria-pressed="false"'+(st?' style="'+st+'"':'')+'>'+h+'</button>'}
+function ttl(d){return (OC[d.o]||OC.cum).t.replace('{n}',d.p?', '+d.p:'')}
+function enc(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o))))}
+function dec(s){return JSON.parse(decodeURIComponent(escape(atob(s))))}
+function base(){return location.href.split('#')[0]}
+function keys(o){return Object.keys(o)}
+
+$('oc').innerHTML=keys(OC).map(function(k){return B('o',k,'<span>'+OC[k].e+'</span>'+OC[k].n,'tile','background:'+G(CO[OC[k].c]))}).join('');
+$('co').innerHTML=keys(CO).map(function(k){return B('c',k,'<span class="vh">'+cap(k)+'</span>','sw','background:'+G(CO[k]))}).join('');
+$('fo').innerHTML=keys(FO).map(function(k){var f=FO[k];return B('f',k,cap(k),'chip','font-family:'+f[0]+';font-style:'+f[2]+';font-weight:'+f[3])}).join('');
+$('ef').innerHTML=keys(EF).map(function(k){return B('e',k,EF[k].l[0]+' '+EF[k].n,'chip')}).join('');
+$('fn').innerHTML=keys(FN).map(function(k){return B('n',k,FN[k].l[0]+' '+FN[k].n,'chip')}).join('');
+$('sz').innerHTML=keys(SZ).map(function(k){return B('s',k,SZ[k][0],'chip')}).join('');
+$('ve').innerHTML=keys(VE).map(function(k){return B('v',k,VE[k][0],'chip')}).join('');
+
+function isPre(v){return keys(OC).some(function(k){return OC[k].m.indexOf(v)>-1})}
+function applyOcc(){
+  var o=OC[S.o];S.c=o.c;S.f=o.f;S.e=o.x;S.n=o.z;
+  $('ms').innerHTML=o.m.map(function(t,i){return '<button type="button" class="ms" data-i="'+i+'" aria-pressed="false">'+t+'</button>'}).join('');
+  var v=$('txt').value.trim();
+  if(!v||isPre(v))$('txt').value=o.m[0];
+}
+function sync(){
+  [].forEach.call(document.querySelectorAll('button[data-s]'),function(b){b.setAttribute('aria-pressed',S[b.dataset.s]===b.dataset.k)});
+  var o=OC[S.o],v=$('txt').value;
+  [].forEach.call(document.querySelectorAll('.ms'),function(b){b.setAttribute('aria-pressed',o.m[b.dataset.i]===v)});
+  var f=FO[S.f],th=$('th');
+  th.style.background=G(CO[S.c]);th.style.fontFamily=f[0];th.style.fontStyle=f[2];th.style.fontWeight=f[3];
+  $('tht').textContent=ttl({o:S.o,p:$('para').value.trim()});
+  $('thm').textContent=$('txt').value.trim()||'Tu mensaje aparecerá aquí';
+  th.style.setProperty('--tz',SZ[S.s][1]);
+  $('the').textContent=EF[S.e].l.join(' ')+'   '+FN[S.n].l[0];
+  if($('out').style.display==='block')upd();
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('button[data-s],.ms');if(!b)return;
+  if(b.classList.contains('ms'))$('txt').value=OC[S.o].m[b.dataset.i];
+  else{S[b.dataset.s]=b.dataset.k;if(b.dataset.s==='o')applyOcc()}
+  sync();
+});
+$('para').oninput=$('txt').oninput=sync;
+
+function cur(){return {o:S.o,c:S.c,f:S.f,e:S.e,n:S.n,s:S.s,v:S.v,p:$('para').value.trim(),m:$('txt').value.trim()}}
+function upd(){
+  var d=cur();
+  if(!d.m)return false;
+  var url=base()+'#'+enc(d);
+  $('lnk').value=url;
+  $('wa').href='https://wa.me/?text='+encodeURIComponent('Te hice una tarjeta 🎁 '+url);
+  return true;
+}
+$('pv').onclick=function(){var d=cur();if(!d.m){$('txt').focus();return}play(d,true)};
+$('gen').onclick=function(){
+  if(!upd()){$('txt').focus();$('txt').placeholder='Escribe un mensaje primero';return}
+  $('out').style.display='block';
+  $('out').scrollIntoView({behavior:'smooth'});
+};
+$('cp').onclick=function(){
+  var l=$('lnk');l.select();
+  try{navigator.clipboard.writeText(l.value);$('cp').textContent='¡Copiado!'}catch(e){document.execCommand&&document.execCommand('copy');$('cp').textContent='Copiado'}
+  setTimeout(function(){$('cp').textContent='Copiar enlace'},1800);
+};
+
+function spawn(emo,m){
+  var s=document.createElement('span');s.className='p '+m;s.textContent=emo;
+  s.style.left=Math.random()*92+'%';s.style.fontSize=(20+Math.random()*26)+'px';
+  s.style.animationDuration=(3.5+Math.random()*3)+'s';
+  s.addEventListener('animationend',function(){s.remove()});
+  $('card').appendChild(s);
+}
+function boom(L){
+  for(var i=0;i<46;i++){
+    var s=document.createElement('span');s.className='b';s.textContent=L[i%L.length];
+    var a=Math.random()*6.283,r=120+Math.random()*Math.min(innerWidth,innerHeight)*.5;
+    s.style.setProperty('--x',Math.cos(a)*r+'px');s.style.setProperty('--y',Math.sin(a)*r+'px');
+    s.style.fontSize=(22+Math.random()*22)+'px';
+    s.addEventListener('animationend',function(e){e.target.remove()});
+    $('card').appendChild(s);
+  }
+}
+function finale(k){
+  var f=FN[k]||FN.confeti,L=f.l;
+  if(f.m==='rain'){for(var i=0;i<45;i++)setTimeout(function(){spawn(L[Math.random()*L.length|0],'down')},Math.random()*1800)}
+  else{
+    if(f.m==='pop'){var p=document.createElement('span');p.className='pop';p.textContent=L[0];$('card').appendChild(p);setTimeout(function(){p.remove()},2800)}
+    boom(L);
+  }
+}
+function play(d,preview){
+  clearInterval(timer);
+  var c=CO[d.c]||CO.morado,fo=FO[d.f]||FO.cursiva,ef=EF[d.e]||EF[d.f]||EF.globos,card=$('card');
+  [].forEach.call(card.querySelectorAll('.p,.b,.pop'),function(x){x.remove()});
+  card.style.background='radial-gradient(circle at 25% 15%,rgba(255,255,255,.3),transparent 55%),'+G(c);
+  card.style.fontFamily=fo[0];card.style.fontStyle=fo[2];card.style.fontWeight=fo[3];card.style.setProperty('--fs',fo[1]);card.style.setProperty('--sz',(SZ[d.s]||SZ.normal)[1]);
+  $('ct').textContent=ttl(d);$('cm').textContent='';$('ca').classList.remove('on');
+  $('cl').style.display=preview?'block':'none';
+  $('mk').style.display=preview?'none':'block';
+  card.classList.add('on');
+  var txt=d.m||'',i=0,ms=M
