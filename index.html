@@ -231,4 +231,19 @@ function play(d,preview){
   $('cl').style.display=preview?'block':'none';
   $('mk').style.display=preview?'none':'block';
   card.classList.add('on');
-  var txt=d.m||'',i=0,ms=M
+  var txt=d.m||'',i=0,ms=Math.min(60,Math.max(28,7000/Math.max(txt.length,1)))*(VE[d.v]||VE.normal)[1];
+  timer=setInterval(function(){
+    i++;$('cm').textContent=txt.slice(0,i);$('cm').scrollTop=$('cm').scrollHeight;
+    if(i%3===0)spawn(ef.l[Math.random()*ef.l.length|0],ef.m);
+    if(i>=txt.length){clearInterval(timer);finale(d.n);$('ca').classList.add('on')}
+  },ms);
+  $('rp').onclick=function(){play(d,preview)};
+  $('cl').onclick=function(){clearInterval(timer);card.classList.remove('on')};
+}
+$('mk').onclick=function(e){e.preventDefault();clearInterval(timer);$('card').classList.remove('on');history.replaceState(null,'',base())};
+
+applyOcc();sync();
+(function(){var h=location.hash.slice(1);if(h){try{play(dec(h),false)}catch(e){}}})();
+</script>
+</body>
+</html>
