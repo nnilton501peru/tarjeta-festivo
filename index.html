@@ -24,6 +24,11 @@ h2{font-size:1.3rem;margin:30px 0 12px}
 .tile[aria-pressed="true"]{outline:3px solid var(--tx);outline-offset:3px}
 input,textarea{width:100%;padding:13px;border:1.5px solid var(--bd);border-radius:14px;background:var(--pn);color:var(--tx);font:inherit}
 textarea{min-height:110px;resize:vertical}
+#txt{border:2px solid #ef4444}
+#txt:focus-visible{outline-color:#ef4444}
+.sello{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;font-weight:700;font-size:.75rem;letter-spacing:.04em;position:relative;z-index:2}
+.card .sello{margin-top:14px;color:rgba(255,255,255,.85)}
+.wrap .sello{margin:28px 0 0;text-align:center;color:var(--mu)}
 :is(input,textarea,button,a):focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 .ms{display:block;width:100%;text-align:left;padding:13px 14px;margin-bottom:8px;border-radius:16px;border:1.5px solid var(--bd);background:var(--pn);color:var(--tx);font:inherit;cursor:pointer}
 .ms[aria-pressed="true"]{border-color:var(--ac);box-shadow:0 0 0 1.5px var(--ac) inset}
@@ -45,11 +50,11 @@ textarea{min-height:110px;resize:vertical}
 #out input{font-size:.85rem}
 .card{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));color:#fff;text-align:center;overflow:hidden}
 .card.on{display:flex}
-.card h2{font-family:inherit;font-style:inherit;font-weight:inherit;font-size:clamp(1.9rem,8.5vw,2.8rem);line-height:1.15;margin:0 0 18px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
+.card h2{font-family:inherit;font-style:inherit;font-weight:inherit;font-size:clamp(1.9rem,8.5vw,2.8rem);line-height:1.15;margin:auto 0 18px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
 .msg{font-size:calc(clamp(1.35rem,5.8vw,1.8rem)*var(--fs,1)*var(--sz,1));max-width:30ch;min-height:6em;max-height:52vh;overflow-y:auto;scrollbar-width:none;white-space:pre-wrap;text-shadow:0 1px 8px rgba(0,0,0,.3)}
 .card .btn{width:auto;min-width:210px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);margin-top:12px;position:relative;z-index:2;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;font-weight:700}
 .card .btn.alt{color:#fff;border-color:rgba(255,255,255,.7)}
-.acts{opacity:0;transition:opacity .6s;pointer-events:none;display:flex;flex-direction:column;align-items:center}
+.acts{opacity:0;transition:opacity .6s;pointer-events:none;display:flex;flex-direction:column;align-items:center;margin-top:auto;width:100%}
 .acts.on{opacity:1;pointer-events:auto}
 .p{position:absolute;pointer-events:none;user-select:none;animation-timing-function:linear;animation-fill-mode:forwards}
 .p.up{bottom:-40px;animation-name:up}.p.down{top:-40px;animation-name:down}.p.sway{bottom:-40px;animation-name:sway}
@@ -75,7 +80,9 @@ textarea{min-height:110px;resize:vertical}
   <input id="para" maxlength="40" placeholder="Nombre (opcional)" autocomplete="off" aria-label="Nombre">
 
   <h2>Tu mensaje</h2>
+  <p class="lb">Mensajes sugeridos</p>
   <div id="ms"></div>
+  <p class="lb" style="color:#ef4444">Escribe el tuyo</p>
   <textarea id="txt" maxlength="400" aria-label="Mensaje" placeholder="Escribe aquí tu mensaje"></textarea>
 
   <h2>Dale tu estilo</h2>
@@ -97,6 +104,7 @@ textarea{min-height:110px;resize:vertical}
     <a class="btn" id="wa" target="_blank" rel="noopener">Enviar por WhatsApp</a>
     <button class="btn alt" id="cp">Copiar enlace</button>
   </div>
+  <div class="sello">Mauricio · v5.2</div>
 </main>
 
 <section class="card" id="card" aria-live="polite">
@@ -107,19 +115,20 @@ textarea{min-height:110px;resize:vertical}
     <a class="btn alt" id="mk" href="#">Crear la mía</a>
     <button class="btn alt" id="cl" style="display:none">Volver</button>
   </div>
+  <div class="sello">Mauricio · v5.2</div>
 </section>
 
 <script>
 var CO={verde:['#22c55e','#065f46'],rojo:['#f87171','#991b1b'],azul:['#38bdf8','#1d4ed8'],morado:['#a855f7','#4c1d95'],rosa:['#f472b6','#be185d'],dorado:['#fbbf24','#b45309'],noche:['#4f46e5','#0f172a'],atardecer:['#fb923c','#c026d3']};
 var FO={elegante:['Fraunces,Georgia,serif',1,'italic',600],cursiva:['Pacifico,cursive',.9,'normal',400],divertida:['Fredoka,sans-serif',1,'normal',500],manuscrita:['Caveat,cursive',1.25,'normal',600]};
 var EF={estrellas:{n:'Estrellas',l:['⭐','✨','🌟'],m:'up'},globos:{n:'Globos',l:['🎈'],m:'up'},corazones:{n:'Corazones',l:['💖','💕','💗'],m:'sway'},flores:{n:'Flores',l:['🌸','🌷','🌼'],m:'down'},mariposas:{n:'Mariposas',l:['🦋'],m:'sway'},nieve:{n:'Nieve',l:['❄️'],m:'down'}};
-var FN={fuegos:{n:'Fuegos',l:['🎆','🎇','✨'],m:'burst'},confeti:{n:'Confeti',l:['🎊','🎉','🎈'],m:'rain'},petalos:{n:'Pétalos',l:['🌹','🌸','🌷'],m:'rain'},torta:{n:'Torta',l:['🎂','🍰','✨'],m:'pop'},corazones:{n:'Corazones',l:['❤️','💖','💘'],m:'burst'},regalos:{n:'Regalos',l:['🎁','🎄','⭐'],m:'pop'}};
+var FN={fuegos:{n:'Fuegos',l:['🎆','🎇','✨'],m:'burst'},confeti:{n:'Confeti',l:['🎊','🎉','🎈'],m:'rain'},petalos:{n:'Pétalos',l:['🌹','🌸','🌷'],m:'rain'},torta:{n:'Torta',l:['🎂','🍰','✨'],m:'pop'},corazones:{n:'Corazones',l:['❤️','💖','💘'],m:'burst'},regalos:{n:'Regalos',l:['🎁','🎄','⭐'],m:'pop'},cervezas:{n:'Cervezas',l:['🍺','🍻'],m:'beer'},balones:{n:'Balones',l:['⚽'],m:'burst'}};
 var OC={
 cum:{n:'Cumpleaños',e:'🎂',t:'¡Feliz cumpleaños{n}!',c:'rosa',f:'cursiva',x:'globos',z:'confeti',m:['Hoy es tu día y quiero que lo disfrutes al máximo. Que se cumplan todos tus sueños y que nunca te falte alegría. Te quiero mucho.','Un año más de vida, de risas y de recuerdos bonitos. Gracias por existir. ¡A celebrar como se debe!','Que Dios te bendiga hoy y siempre, y te llene de salud, paz y mucho amor. Disfruta tu día.','Un añito más, pero cada vez mejor. Que no falten la torta, los abrazos y las ganas de celebrar.']},
 nav:{n:'Navidad',e:'🎄',t:'¡Feliz Navidad{n}!',c:'rojo',f:'elegante',x:'nieve',z:'regalos',m:['Que esta Navidad llegue a tu casa con paz, unión y mucho amor. Que nunca falte la mesa llena ni la familia reunida.','Gracias por este año a tu lado. Te deseo una Navidad llena de luz y un año nuevo lleno de bendiciones.','Que el niño Dios nazca en tu corazón y te traiga esperanza, salud y alegría para todo el año.','Feliz Navidad: que el panetón sea grande, el chocolate caliente y los abrazos interminables.']},
 ano:{n:'Año Nuevo',e:'🥂',t:'¡Feliz Año Nuevo{n}!',c:'dorado',f:'divertida',x:'estrellas',z:'fuegos',m:['Que este año nuevo te traiga salud, trabajo y mucha felicidad. Que todo lo que pidas se haga realidad.','Cerramos un año más y lo hacemos juntos. Gracias por todo. ¡Que el próximo sea todavía mejor!','Brindo por ti y por todo lo bueno que viene. Que empiece con el pie derecho.','Nuevo año, nuevas metas y las mismas ganas de seguir adelante. ¡Vamos con todo!']},
 mad:{n:'Día de la Madre',e:'🌷',t:'¡Feliz Día de la Madre{n}!',c:'rosa',f:'manuscrita',x:'flores',z:'petalos',m:['Gracias por darme la vida y por tu amor de todos los días. Eres lo más valioso que tengo. Te amo, mamá.','Mamá, tus abrazos curan todo y tu cariño me da fuerzas. Gracias por no rendirte nunca conmigo.','Hoy y siempre quiero agradecerte todo lo que haces por nosotros. Dios te bendiga, mamita linda.','No hay palabras suficientes para decirte cuánto te quiero. Feliz día, la mejor mamá del mundo.']},
-pad:{n:'Día del Padre',e:'👔',t:'¡Feliz Día del Padre{n}!',c:'azul',f:'elegante',x:'estrellas',z:'confeti',m:['Gracias por ser mi ejemplo y por enseñarme a seguir adelante. Te quiero mucho, papá.','Papá, tu esfuerzo y tu cariño me inspiran cada día. Gracias por todo lo que me has dado.','Hoy quiero decirte lo orgulloso que me siento de tenerte como papá. Dios te bendiga, papito.','El mejor papá del mundo es el mío. Gracias por tu paciencia, tus consejos y tu cariño.']},
+pad:{n:'Día del Padre',e:'👔',t:'¡Feliz Día del Padre{n}!',c:'azul',f:'elegante',x:'estrellas',z:'cervezas',m:['Gracias por ser mi ejemplo y por enseñarme a seguir adelante. Te quiero mucho, papá.','Papá, tu esfuerzo y tu cariño me inspiran cada día. Gracias por todo lo que me has dado.','Hoy quiero decirte lo orgulloso que me siento de tenerte como papá. Dios te bendiga, papito.','El mejor papá del mundo es el mío. Gracias por tu paciencia, tus consejos y tu cariño.']},
 ani:{n:'Aniversario',e:'💍',t:'¡Feliz aniversario{n}!',c:'dorado',f:'elegante',x:'mariposas',z:'petalos',m:['Cada día a tu lado es mi mejor regalo. Gracias por tu amor y por elegirme siempre. Feliz aniversario.','Un año más juntos y te sigo queriendo como el primer día, o más. Gracias por tanto.','Contigo aprendí que el amor es compañía, paciencia y risas. Que vengan muchos años más.','Gracias por quedarte en los días buenos y en los difíciles. Te amo hoy y siempre.']},
 val:{n:'San Valentín',e:'💘',t:'Feliz San Valentín{n} ❤',c:'rojo',f:'cursiva',x:'corazones',z:'corazones',m:['Eres la razón de mis sonrisas y mi lugar favorito. Feliz San Valentín, mi amor.','No necesito flores ni chocolates, solo tenerte a mi lado. Te quiero mucho.','Si me dieran a elegir otra vez, te elegiría a ti mil veces. Feliz día del amor.','Tú, yo y un día lleno de cariño. Gracias por hacerme tan feliz.']},
 gra:{n:'Graduación',e:'🎓',t:'¡Felicidades{n}!',c:'azul',f:'divertida',x:'estrellas',z:'confeti',m:['Lo lograste. Tu esfuerzo y tus desvelos valieron la pena. Qué orgullo verte llegar hasta aquí.','Felicidades por este gran paso. Que se abran todas las puertas y que sigas cumpliendo tus sueños.','De los libros al éxito: ahora empieza lo mejor. Mucha suerte en esta nueva etapa.','Nadie dijo que sería fácil, pero tú lo hiciste. Disfruta este logro, te lo mereces.']},
@@ -215,7 +224,8 @@ function boom(L){
 }
 function finale(k){
   var f=FN[k]||FN.confeti,L=f.l;
-  if(f.m==='rain'){for(var i=0;i<45;i++)setTimeout(function(){spawn(L[Math.random()*L.length|0],'down')},Math.random()*1800)}
+  if(f.m==='beer'){for(var j=0;j<30;j++)setTimeout(function(){spawn(L[Math.random()*L.length|0],'sway')},Math.random()*2200)}
+  else if(f.m==='rain'){for(var i=0;i<45;i++)setTimeout(function(){spawn(L[Math.random()*L.length|0],'down')},Math.random()*1800)}
   else{
     if(f.m==='pop'){var p=document.createElement('span');p.className='pop';p.textContent=L[0];$('card').appendChild(p);setTimeout(function(){p.remove()},2800)}
     boom(L);
@@ -223,7 +233,7 @@ function finale(k){
 }
 function play(d,preview){
   clearInterval(timer);
-  var c=CO[d.c]||CO.morado,fo=FO[d.f]||FO.cursiva,ef=EF[d.e]||EF[d.f]||EF.globos,card=$('card');
+  var c=CO[d.c]||CO.morado,fo=FO[d.f]||FO.cursiva,ef=EF[d.e]||EF.globos,card=$('card');
   [].forEach.call(card.querySelectorAll('.p,.b,.pop'),function(x){x.remove()});
   card.style.background='radial-gradient(circle at 25% 15%,rgba(255,255,255,.3),transparent 55%),'+G(c);
   card.style.fontFamily=fo[0];card.style.fontStyle=fo[2];card.style.fontWeight=fo[3];card.style.setProperty('--fs',fo[1]);card.style.setProperty('--sz',(SZ[d.s]||SZ.normal)[1]);
