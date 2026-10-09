@@ -58,14 +58,18 @@ textarea{min-height:110px;resize:vertical}
 .acts.on{opacity:1;pointer-events:auto}
 .p{position:absolute;pointer-events:none;user-select:none;animation-timing-function:linear;animation-fill-mode:forwards}
 .p.up{bottom:-40px;animation-name:up}.p.down{top:-40px;animation-name:down}.p.sway{bottom:-40px;animation-name:sway}
+.p.bounce{top:-40px;animation-name:bounce}
+.k{position:absolute;top:-24px;pointer-events:none;border-radius:2px;animation:conf linear forwards}
 @keyframes up{to{transform:translateY(-115vh) rotate(25deg);opacity:.2}}
 @keyframes down{to{transform:translateY(115vh) rotate(200deg)}}
 @keyframes sway{25%{transform:translate(32px,-30vh)}50%{transform:translate(-32px,-60vh)}75%{transform:translate(32px,-90vh)}to{transform:translate(0,-115vh);opacity:.2}}
+@keyframes bounce{0%{transform:translateY(0);animation-timing-function:cubic-bezier(.5,0,1,.5)}38%{transform:translateY(92vh) rotate(120deg);animation-timing-function:cubic-bezier(0,.5,.5,1)}55%{transform:translateY(62vh) rotate(200deg);animation-timing-function:cubic-bezier(.5,0,1,.5)}72%{transform:translateY(92vh) rotate(280deg);animation-timing-function:cubic-bezier(0,.5,.5,1)}84%{transform:translateY(78vh) rotate(330deg);animation-timing-function:cubic-bezier(.5,0,1,.5)}94%{transform:translateY(92vh) rotate(380deg)}to{transform:translateY(92vh) rotate(380deg);opacity:0}}
+@keyframes conf{0%{transform:translate(0,0) rotate(0) rotateX(0)}25%{transform:translate(var(--dx),28vh) rotate(180deg) rotateX(180deg)}50%{transform:translate(calc(var(--dx)*-1),56vh) rotate(360deg) rotateX(360deg)}75%{transform:translate(var(--dx),84vh) rotate(540deg) rotateX(540deg)}to{transform:translate(0,112vh) rotate(720deg) rotateX(720deg);opacity:.6}}
 .b{position:absolute;left:50%;top:50%;animation:boom 1.7s ease-out forwards;pointer-events:none}
 @keyframes boom{from{transform:translate(0,0) scale(.4);opacity:1}to{transform:translate(var(--x),var(--y)) scale(1.4);opacity:0}}
 .pop{position:absolute;left:50%;top:42%;font-size:7rem;animation:pop .8s ease-out forwards;pointer-events:none}
 @keyframes pop{0%{transform:translate(-50%,-50%) scale(0)}60%{transform:translate(-50%,-50%) scale(1.35)}to{transform:translate(-50%,-50%) scale(1)}}
-@media (prefers-reduced-motion:reduce){.p,.b,.pop{animation-duration:.01s!important}}
+@media (prefers-reduced-motion:reduce){.p,.b,.pop,.k{animation-duration:.01s!important}}
 </style>
 </head>
 <body>
@@ -122,7 +126,7 @@ textarea{min-height:110px;resize:vertical}
 var CO={verde:['#22c55e','#065f46'],rojo:['#f87171','#991b1b'],azul:['#38bdf8','#1d4ed8'],morado:['#a855f7','#4c1d95'],rosa:['#f472b6','#be185d'],dorado:['#fbbf24','#b45309'],noche:['#4f46e5','#0f172a'],atardecer:['#fb923c','#c026d3']};
 var FO={elegante:['Fraunces,Georgia,serif',1,'italic',600],cursiva:['Pacifico,cursive',.9,'normal',400],divertida:['Fredoka,sans-serif',1,'normal',500],manuscrita:['Caveat,cursive',1.25,'normal',600]};
 var EF={estrellas:{n:'Estrellas',l:['⭐','✨','🌟'],m:'up'},globos:{n:'Globos',l:['🎈'],m:'up'},corazones:{n:'Corazones',l:['💖','💕','💗'],m:'sway'},flores:{n:'Flores',l:['🌸','🌷','🌼'],m:'down'},mariposas:{n:'Mariposas',l:['🦋'],m:'sway'},nieve:{n:'Nieve',l:['❄️'],m:'down'}};
-var FN={fuegos:{n:'Fuegos',l:['🎆','🎇','✨'],m:'burst'},confeti:{n:'Confeti',l:['🎊','🎉','🎈'],m:'rain'},petalos:{n:'Pétalos',l:['🌹','🌸','🌷'],m:'rain'},torta:{n:'Torta',l:['🎂','🍰','✨'],m:'pop'},corazones:{n:'Corazones',l:['❤️','💖','💘'],m:'burst'},regalos:{n:'Regalos',l:['🎁','🎄','⭐'],m:'pop'},cervezas:{n:'Cervezas',l:['🍺','🍻'],m:'beer'},balones:{n:'Balones',l:['⚽'],m:'burst'}};
+var FN={fuegos:{n:'Fuegos',l:['🎆','🎇','✨'],m:'fw'},confeti:{n:'Confeti',l:['🎊','🎉','🎈'],m:'conf'},petalos:{n:'Pétalos',l:['🌹','🌸','🌷'],m:'rain'},torta:{n:'Torta',l:['🎂','🍰','✨'],m:'pop'},corazones:{n:'Corazones',l:['❤️','💖','💘'],m:'burst'},regalos:{n:'Regalos',l:['🎁','🎄','⭐'],m:'rain'},cervezas:{n:'Cervezas',l:['🍺','🍻'],m:'beer'},balones:{n:'Balones',l:['⚽'],m:'bounce'}};
 var OC={
 cum:{n:'Cumpleaños',e:'🎂',t:'¡Feliz cumpleaños{n}!',c:'rosa',f:'cursiva',x:'globos',z:'confeti',m:['Hoy es tu día y quiero que lo disfrutes al máximo. Que se cumplan todos tus sueños y que nunca te falte alegría. Te quiero mucho.','Un año más de vida, de risas y de recuerdos bonitos. Gracias por existir. ¡A celebrar como se debe!','Que Dios te bendiga hoy y siempre, y te llene de salud, paz y mucho amor. Disfruta tu día.','Un añito más, pero cada vez mejor. Que no falten la torta, los abrazos y las ganas de celebrar.']},
 nav:{n:'Navidad',e:'🎄',t:'¡Feliz Navidad{n}!',c:'rojo',f:'elegante',x:'nieve',z:'regalos',m:['Que esta Navidad llegue a tu casa con paz, unión y mucho amor. Que nunca falte la mesa llena ni la familia reunida.','Gracias por este año a tu lado. Te deseo una Navidad llena de luz y un año nuevo lleno de bendiciones.','Que el niño Dios nazca en tu corazón y te traiga esperanza, salud y alegría para todo el año.','Feliz Navidad: que el panetón sea grande, el chocolate caliente y los abrazos interminables.']},
@@ -222,9 +226,36 @@ function boom(L){
     $('card').appendChild(s);
   }
 }
+function conf(){
+  var C=['#ef4444','#f59e0b','#22c55e','#3b82f6','#a855f7','#ec4899','#fde047'];
+  for(var i=0;i<90;i++)setTimeout(function(){
+    var s=document.createElement('span'),w=6+Math.random()*6;s.className='k';
+    s.style.width=w+'px';s.style.height=(w*1.8)+'px';s.style.background=C[Math.random()*C.length|0];
+    s.style.left=Math.random()*100+'%';s.style.setProperty('--dx',(Math.random()*50-25)+'px');
+    s.style.animationDuration=(3+Math.random()*2.5)+'s';
+    s.addEventListener('animationend',function(){s.remove()});
+    $('card').appendChild(s);
+  },Math.random()*2600);
+}
+function fw(L){
+  for(var n=0;n<6;n++)setTimeout(function(){
+    var x=15+Math.random()*70,y=12+Math.random()*45;
+    for(var i=0;i<14;i++){
+      var s=document.createElement('span'),a=i/14*6.283,r=60+Math.random()*50;
+      s.className='b';s.textContent=L[i%L.length];s.style.left=x+'%';s.style.top=y+'%';
+      s.style.setProperty('--x',Math.cos(a)*r+'px');s.style.setProperty('--y',Math.sin(a)*r+'px');
+      s.style.fontSize=(18+Math.random()*10)+'px';s.style.animationDuration='2.2s';
+      s.addEventListener('animationend',function(e){e.target.remove()});
+      $('card').appendChild(s);
+    }
+  },n*650);
+}
 function finale(k){
   var f=FN[k]||FN.confeti,L=f.l;
   if(f.m==='beer'){for(var j=0;j<30;j++)setTimeout(function(){spawn(L[Math.random()*L.length|0],'sway')},Math.random()*2200)}
+  else if(f.m==='bounce'){for(var q=0;q<24;q++)setTimeout(function(){spawn(L[0],'bounce')},Math.random()*3500)}
+  else if(f.m==='conf')conf();
+  else if(f.m==='fw')fw(L);
   else if(f.m==='rain'){for(var i=0;i<45;i++)setTimeout(function(){spawn(L[Math.random()*L.length|0],'down')},Math.random()*1800)}
   else{
     if(f.m==='pop'){var p=document.createElement('span');p.className='pop';p.textContent=L[0];$('card').appendChild(p);setTimeout(function(){p.remove()},2800)}
@@ -234,7 +265,7 @@ function finale(k){
 function play(d,preview){
   clearInterval(timer);
   var c=CO[d.c]||CO.morado,fo=FO[d.f]||FO.cursiva,ef=EF[d.e]||EF.globos,card=$('card');
-  [].forEach.call(card.querySelectorAll('.p,.b,.pop'),function(x){x.remove()});
+  [].forEach.call(card.querySelectorAll('.p,.b,.pop,.k'),function(x){x.remove()});
   card.style.background='radial-gradient(circle at 25% 15%,rgba(255,255,255,.3),transparent 55%),'+G(c);
   card.style.fontFamily=fo[0];card.style.fontStyle=fo[2];card.style.fontWeight=fo[3];card.style.setProperty('--fs',fo[1]);card.style.setProperty('--sz',(SZ[d.s]||SZ.normal)[1]);
   $('ct').textContent=ttl(d);$('cm').textContent='';$('ca').classList.remove('on');
@@ -250,10 +281,11 @@ function play(d,preview){
   $('rp').onclick=function(){play(d,preview)};
   $('cl').onclick=function(){clearInterval(timer);card.classList.remove('on')};
 }
-$('mk').onclick=function(e){e.preventDefault();clearInterval(timer);$('card').classList.remove('on');history.replaceState(null,'',base())};
+$('mk').onclick=function(e){e.preventDefault();try{document.fullscreenElement&&document.exitFullscreen()}catch(x){}clearInterval(timer);$('card').classList.remove('on');history.replaceState(null,'',base())};
 
+function goFS(){var e=document.documentElement,r=e.requestFullscreen||e.webkitRequestFullscreen;try{var p=r&&r.call(e);if(p&&p.catch)p.catch(function(){})}catch(x){}}
 applyOcc();sync();
-(function(){var h=location.hash.slice(1);if(h){try{play(dec(h),false)}catch(e){}}})();
+(function(){var h=location.hash.slice(1);if(h){try{play(dec(h),false);document.addEventListener('click',goFS,{once:true})}catch(e){}}})();
 </script>
 </body>
 </html>
